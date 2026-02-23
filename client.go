@@ -333,6 +333,8 @@ func (c *Client) AcceptProblemJSON(acceptProblemJSON bool) *Client {
 // Restful Lambda server responds with msgpack if Accept header indicates its support automatically.
 // This is an EXPERIMENTAL feature.
 // Detailed at https://github.com/nokia/restful/issues/30
+//
+// Deprecated. This feature will be dropped in the near-future.
 func (c *Client) MsgPack(allowed bool) *Client {
 	if allowed {
 		c.msgpackUsage = msgpackDiscover
@@ -393,6 +395,7 @@ func (c *Client) Timeout(timeout time.Duration) *Client {
 
 // SanitizeJSON enables JSON sanitization.
 // See details at SanitizeJSONString.
+// Deprecated.
 func (c *Client) SanitizeJSON() *Client {
 	c.sanitizeJSON = true
 	return c
@@ -728,7 +731,7 @@ func (c *Client) do(req *http.Request) (resp *http.Response, err error) {
 		err = ctxErr
 		return
 	}
-	resp, err = c.Client.Do(req)
+	resp, err = c.Client.Do(req) // #nosec G704: false positive; URL validated by c.httpsCfg.isAllowed in exported Do() function.
 
 	// Workaround for https://github.com/golang/go/issues/36026
 	if err, ok := err.(net.Error); ok && err.Timeout() {
