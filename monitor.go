@@ -64,6 +64,11 @@ func (w monitorWriter) Flush() {
 	}
 }
 
+// Unwrap unwrapped the ResponseWriter to previous ResponseWriter
+func (w monitorWriter) Unwrap() http.ResponseWriter {
+	return w.writer
+}
+
 type monitorHandler struct {
 	origHandler http.Handler
 	pre         MonitorFuncPre
